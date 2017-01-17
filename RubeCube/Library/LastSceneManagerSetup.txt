@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/RubeCube.unity
+  isLoaded: 1
+  isActive: 1
