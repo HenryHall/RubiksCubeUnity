@@ -8,6 +8,7 @@ public class CubeScript : MonoBehaviour {
 	public float RotationSpeed = 360.0f;
 	public int MouseMovementThreashhold = 1;
 	public GameObject RubeCubeObject;
+//	public GameObject SpinDetector;
 
 	GameObject newRotation;
 
@@ -54,6 +55,7 @@ public class CubeScript : MonoBehaviour {
 
 
 	void leftRotation () {
+
 
 		newRotation = new GameObject ("What does this do?");
 		newRotation.transform.rotation = RubeCubeObject.transform.rotation;
