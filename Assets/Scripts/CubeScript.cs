@@ -8,7 +8,10 @@ public class CubeScript : MonoBehaviour {
 	public float RotationSpeed = 360.0f;
 	public int MouseMovementThreashhold = 1;
 	public GameObject RubeCubeObject;
-//	public GameObject SpinDetector;
+	public GameObject Selector;
+
+	public string defaultAxis = "x";
+	public int defaultIndex = 1;
 
 	GameObject newRotation;
 
@@ -21,11 +24,23 @@ public class CubeScript : MonoBehaviour {
 
 	private void Update () {
 
-
+		//Rotation Input
 		if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			leftRotation ();
+			rotation(defaultAxis, defaultIndex, -1);
 		} else if (Input.GetKeyDown (KeyCode.UpArrow)) {
-			rightRotation ();
+			rotation(defaultAxis, defaultIndex, 1);
+		}
+
+
+		//Axis Input
+		if (Input.GetKeyDown (KeyCode.Z)) {
+			toggleAxis ();
+		}
+
+
+		//Index Input
+		if (Input.GetKeyDown (KeyCode.X)) {
+			toggleIndex ();
 		}
 
 
@@ -54,8 +69,45 @@ public class CubeScript : MonoBehaviour {
 	}
 
 
-	void leftRotation () {
+	void toggleAxis () {
 
+		switch (defaultAxis) {
+		case "x":
+			defaultAxis = "y";
+			break;
+		case "y":
+			defaultAxis = "z";
+			break;
+		case "z":
+			defaultAxis = "x";
+			break;
+
+		}
+
+	}
+
+
+	void toggleIndex () {
+
+		switch (defaultIndex) {
+		case 0:
+			defaultIndex = 1;
+			break;
+		case 1:
+			defaultIndex = 2;
+			break;
+		case 2:
+			defaultIndex = 0;
+			break;
+
+		}
+
+	}
+
+
+	void rotation (string axis, int index, int direction) {
+
+		float rotationDirection = 90.0f * direction;
 
 		newRotation = new GameObject ("What does this do?");
 		newRotation.transform.rotation = RubeCubeObject.transform.rotation;
@@ -64,48 +116,44 @@ public class CubeScript : MonoBehaviour {
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				RubeCube [0, i, j].transform.parent = newRotation.transform;
+
+				switch (axis) {
+					case "x":
+						RubeCube [index, i, j].transform.parent = newRotation.transform;
+						break;
+					case "y":
+						RubeCube [i, index, j].transform.parent = newRotation.transform;
+						break;
+					case "z":
+						RubeCube [i, j, index].transform.parent = newRotation.transform;
+						break;
+				}
+
 			}
 		}
 
-		newRotation.transform.Rotate (new Vector3(-90, 0, 0), Space.Self);
-
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				RubeCube [0, i, j].transform.parent = RubeCubeObject.transform;
-			}
+		switch (axis) {
+		case "x":
+			newRotation.transform.Rotate (new Vector3(rotationDirection, 0, 0), Space.Self);
+			break;
+		case "y":
+			newRotation.transform.Rotate (new Vector3(0, rotationDirection, 0), Space.Self);
+			break;
+		case "z":
+			newRotation.transform.Rotate (new Vector3(0, 0, rotationDirection), Space.Self);
+			break;
 		}
 
+
+		foreach (GameObject cube in RubeCube) {
+			cube.transform.parent = RubeCubeObject.transform;
+		}
+		
 		Destroy (newRotation);
 
 	}
-
-	void rightRotation () {
-
-		newRotation = new GameObject ("What does this do?");
-		newRotation.transform.rotation = RubeCubeObject.transform.rotation;
-
-		GameObject[,,] RubeCube = new GameObject[3, 3, 3] { { {Cube1, Cube10, Cube19}, {Cube4, Cube13, Cube22}, {Cube7, Cube16, Cube25} }, { {Cube2, Cube11, Cube20}, {Cube5, Cube14, Cube23}, {Cube8, Cube17, Cube26} }, { {Cube3, Cube12, Cube21}, {Cube6, Cube15, Cube24}, {Cube9, Cube18, Cube27} } };
-
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				RubeCube [0, i, j].transform.parent = newRotation.transform;
-			}
-		}
-
-		newRotation.transform.Rotate (90, 0, 0);
-
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				RubeCube [0, i, j].transform.parent = RubeCubeObject.transform;
-			}
-		}
-
-		Destroy (newRotation);
-
-	}
-
-
 	
 
 }
+
+
