@@ -10,8 +10,8 @@ public class CubeScript : MonoBehaviour {
 	public GameObject RubeCubeObject;  //Physical unity object
 	public GameObject Selector;  //Visual unity selector around cube
 
-	public string defaultAxis = "x";  //X axis
-	public int defaultIndex = 1;  //Middle index
+	private string defaultAxis = "x";  //X axis
+	private int defaultIndex = 1;  //Middle index
 
 	GameObject newRotation;  //A temporary object to hold the cubes that will be rotated
 	GameObject[,,] RubeCube;  //An array to hold the data for cube positions
@@ -76,15 +76,18 @@ public class CubeScript : MonoBehaviour {
 		switch (defaultAxis) {
 		case "x":
 			defaultAxis = "y";
-			// Selector.transform.Rotate ( new Vector3 (), Space.Self);
+			Selector.transform.RotateAround ( Vector3.zero, Selector.transform.forward, 90.0f);
 			break;
 
 		case "y":
 			defaultAxis = "z";
+			Selector.transform.RotateAround ( Vector3.zero, Selector.transform.up, -90.0f);
 			break;
 
 		case "z":
 			defaultAxis = "x";
+			Selector.transform.RotateAround ( Vector3.zero, Selector.transform.up, 90.0f);
+			Selector.transform.RotateAround ( Vector3.zero, Selector.transform.forward, -90.0f);
 			break;
 
 		}
@@ -97,12 +100,15 @@ public class CubeScript : MonoBehaviour {
 		switch (defaultIndex) {
 		case 0:
 			defaultIndex = 1;
+			Selector.transform.Translate( new Vector3 (1.1f, 0 , 0), Space.Self );
 			break;
 		case 1:
 			defaultIndex = 2;
+			Selector.transform.Translate( new Vector3 (1.1f, 0 , 0), Space.Self );
 			break;
 		case 2:
 			defaultIndex = 0;
+			Selector.transform.Translate( new Vector3 (-2.2f, 0 , 0), Space.Self );
 			break;
 
 		}
@@ -111,6 +117,10 @@ public class CubeScript : MonoBehaviour {
 
 
 	void rotation (string axis, int index, int direction) {
+
+		print(axis.ToString());
+		print(index.ToString());
+		print(direction.ToString());
 
 		float rotationDirection = 90.0f * direction;
 
@@ -149,9 +159,9 @@ public class CubeScript : MonoBehaviour {
 						RubeCube [i, j, index].transform.parent = newRotation.transform;
 
 						if (direction == -1) {
-							tempCube [i, j, index] = RubeCube [j, 2-i, index];
-						} else if (direction == 1) {
 							tempCube [i, j, index] = RubeCube [2-j, i, index];
+						} else if (direction == 1) {
+							tempCube [i, j, index] = RubeCube [j, 2-i, index];
 						}
 
 						break;
